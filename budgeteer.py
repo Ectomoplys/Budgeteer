@@ -1,4 +1,4 @@
-from commandparse import parse_command
+import parser
 
 
 def main():
@@ -8,6 +8,6 @@ def main():
         command = input("command: ")
         commands = command.split()
 
-        starting = parse_command(commands)
+        starting = parser.parse(commands)
 
 main()
