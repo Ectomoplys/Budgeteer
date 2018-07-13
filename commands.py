@@ -1,18 +1,20 @@
+from transaction import Transaction
+import pickle
 import error_handler
 
 def help():
 
     print("HELP")
     print('''
-        ARGUMENT                RETURN TYPE     FUNCTION
--h                              -> string       displays help
--a  [name] [cost] [isExpense]   -> void         adds a new expense
--d  [id]                        -> void         deletes a transaction
--f  [name|cost|isExpense|date]  -> Transaction  searches for a transaction
--s  [date]                      -> string       displays list of transactions for certain date
-    sort [date|cost]            -> string       displays list of transactions sorted by [argument] from low to high
-    all                         -> string       displays all transactions
--q                              -> void         quits program
+            ARGUMENT                    RETURN TYPE     FUNCTION
+help                                    -> string       displays help
+add         [name] [cost] [isExpense]   -> bool         adds a new expense, returns True is success
+delete      [id]                        -> void         deletes a transaction
+find        [name|cost|isExpense|date]  -> Transaction  searches for a transaction
+display                                 -> string       displays all transactions
+            [date]                      -> string       displays list of transactions for certain date
+            sort [date|cost]            -> string       displays list of transactions sorted by [argument] from low to high
+quit                                    -> void         quits program
     ''')
 
 def find(commands):
@@ -26,35 +28,58 @@ def add(input):
 
     if len(input) < 3:
         error_handler.ERROR_FEW_ARGS()
-    
+        return
 
+    if len(input) > 3:
+        error_handler.ERROR_MANY_ARGS()
+        return
+
+    name = input[0]
+    cost = float(input[1])
+    isExpense = True if (input[2] == 'y' or input[2] == 'yes') else False
+
+    transaction = Transaction(name, cost, isExpense)
+
+    save_transation(transaction)
 
 def display():
-    '''
+    print('''
+ID              NAME    COST    DATE
+    ''')
+
     transaction_list = load_transactions()
 
     for transaction in transaction_list:
         print(transaction)
-    '''
-
-    read_transactions_from_file()
 
 def quit():
 
     print("Goodbye!")
 
-## Save and Load Transactions
+## Save and load Transactions to TEXT file
 
-def write_transaction_to_file(transaction):
-    file = open('transaction_history.txt', 'a+')
+def save_transation(transaction):
+    file = open('transactions.pkl', 'ab')
 
-    file.write(transaction)
+    pickle.dump(transaction, file)
 
     file.close()
 
-def read_transactions_from_file():
-    file = open('transaction_history.txt', 'r')
+def load_transactions():
+    transaction_list = []
 
-    if file.mode == 'r':
-        contents = file.read()
-        print(contents)
+    file = open('transactions.pkl', 'rb')
+
+    while 1:
+        try:
+            transaction = pickle.load(file)
+        except EOFError:
+            break
+
+        transaction_list.append(transaction)
+
+    return transaction_list
+
+
+
+

@@ -1,17 +1,16 @@
 import datetime
 import helper
 
-class Transaction:
+class Transaction(object):
 
-    def __init__(self, id, name = '', cost = 0.0, isexpense = True):
-        self.id = id
+    def __init__(self, name = '', cost = 0.0, isexpense = True):
         self.name = name
         self.cost = cost
         self.isexpense = isexpense
         self.date = datetime.datetime.now()
 
     def __repr__(self):
-        return 'name: {0}\ncost: ${1}\nisExpense: {2}\ndate: {3} \n'.format(self.name, self.cost, self.isexpense, helper.pretty_time_format(self.date));
+        return '{0}\t{1}\t{2}\t{3}\n'.format(id(self), self.name, self.cost, helper.pretty_time_format_quick(self.date))
 
     def quick_display(self):
-        return '{0}\t{1}\t{2}\t{3}\n'.format(self.id, self.name, helper.pretty_time_format(self.date), self.cost)
+        return '{0}\t{1}\t{2}\t{3}\n'.format(id(self), self.name, self.cost, helper.pretty_time_format_quick(self.date))

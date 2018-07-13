@@ -6,8 +6,10 @@ def main():
 
     while starting:
         command = input("command: ")
-        commands = command.split()
+        commands = command.split(" ")
 
         starting = parser.parse(commands)
 
 main()
+
+

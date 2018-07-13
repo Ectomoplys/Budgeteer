@@ -1,8 +1,0 @@
-name: gas 
-cost: 30.0
-isExpense: True
-date: 10:29 on Jul 13, 2018 
-name: gas 
-cost: 35.0
-isExpense: True
-date: 10:29 on Jul 13, 2018 

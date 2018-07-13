@@ -2,19 +2,18 @@ from transaction import Transaction
 import commands as command
 import pickle
 
-def parse(command):
-    print()
-    command = command[0]
+def parse(commands):
+    _command = commands[0]
 
-    if command == 'h' or command == 'help':
+    if _command == 'help':
         command.help()
-    elif command == 'a' or command == 'add':
-        command.add(command[1:])
-    elif command == 'd' or command == 'display':
+    elif _command == 'add':
+        command.add(commands[1:])
+    elif _command == 'display':
         command.display()
-    elif command == 'f' or command == 'find':
+    elif _command == 'find':
         command.find(command)
-    elif command == 'q' or command == 'quit':
+    elif _command == 'quit':
         command.quit()
         return False
 
