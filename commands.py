@@ -1,6 +1,8 @@
-from transaction import Transaction
-import pickle
 import error_handler
+import datetime
+from transaction import Transaction
+from database import Database
+import helper
 
 def help():
 
@@ -18,13 +20,23 @@ quit                                    -> void         quits program
     ''')
 
 def find(commands):
+    database = Database()
+
+    if commands[0] == 'price':
+        if commands[1] == 'greater':
+            database.find_greater(commands[2])
+        elif commands[1] == 'less':
+            database.find_less(commands[2])
+
+    elif commands[0] == 'isexpense':
+        database.find_isexpense( True if (commands[1] == 'yes' or commands[1] == 'y') else False)
+    elif commands[0] == 'date':
+        database.find_date(commands[1])
+    elif commands[0].isalnum():
+        database.find_name(commands[0])
     return
 
-
 def add(input):
-    name = ''
-    cost = 0.0
-    isExpense = True
 
     if len(input) < 3:
         error_handler.ERROR_FEW_ARGS()
@@ -34,52 +46,49 @@ def add(input):
         error_handler.ERROR_MANY_ARGS()
         return
 
-    name = input[0]
-    cost = float(input[1])
-    isExpense = True if (input[2] == 'y' or input[2] == 'yes') else False
+    _name = input[0]
+    _cost = float(input[1])
+    _isExpense = True if (input[2] == 'y' or input[2] == 'yes') else False
+    
+    database = Database()
 
-    transaction = Transaction(name, cost, isExpense)
+    _id = database.resolve_id()
 
-    save_transation(transaction)
+    _date = datetime.datetime.now()
+    _day = _date.day
+    _month = _date.month
+    _year = _date.year
+    
 
-def display():
-    print('''
-ID              NAME    COST    DATE
-    ''')
+    transaction = {
+        'name' : _name,
+        'cost' : _cost,
+        'isexpense' : _isExpense,
+        'date' : {
+                    'day' : _day, 
+                    'month' : _month, 
+                    'year' : _year,
+                },
+        'id' : _id,
+    }
 
-    transaction_list = load_transactions()
+    database.add_transaction(transaction)
+    
+def delete(id):
+    database = Database()
+    database.delete_transaction(id)
 
-    for transaction in transaction_list:
-        print(transaction)
+def display(commands = None):
+
+    database = Database()
+    database.display_transactions()
+
+def clear():
+    confirmation = input('Are you sure? This will delete all records! ')
+
+    if confirmation == 'yes':
+        database = Database ()
+        database.clear_transactions()
 
 def quit():
-
     print("Goodbye!")
-
-## Save and load Transactions to TEXT file
-
-def save_transation(transaction):
-    file = open('transactions.pkl', 'ab')
-
-    pickle.dump(transaction, file)
-
-    file.close()
-
-def load_transactions():
-    transaction_list = []
-
-    file = open('transactions.pkl', 'rb')
-
-    while 1:
-        try:
-            transaction = pickle.load(file)
-        except EOFError:
-            break
-
-        transaction_list.append(transaction)
-
-    return transaction_list
-
-
-
-

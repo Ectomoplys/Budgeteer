@@ -1,3 +1,5 @@
+import datetime
+
 def pretty_time_format(time):
     hour = time.hour
     min = time.min
@@ -19,7 +21,6 @@ def pretty_time_format_quick(time):
     return other
 
 def is_number(n):
-
     try:
         float(n)
         return True
