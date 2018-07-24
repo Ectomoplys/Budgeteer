@@ -4,9 +4,9 @@ import datetime
 
 class Database(object):
 
-    def __init__(self):
+    def __init__(self, database = 'budget_database'):
         self.client = MongoClient()
-        self.database = self.client['budget_database']
+        self.database = self.client[database]
         self.collection = self.database['transactions']
         connect('budget_database')
 
@@ -18,13 +18,11 @@ class Database(object):
     def display_transactions(self):
         cursor = self.collection.find()
 
-        for transaction in cursor:
-            print(transaction)
-        
-        return
+        for found in self.collection.find():
+            print(found)
 
     def delete_transaction(self, id):
-        print('Deleteing Transaction with id {0}'.format(id))
+        print('Deleting Transaction with id {0}'.format(id))
         self.collection.delete_one( { 'id' : int(id)} )
 
     def clear_transactions(self):
@@ -67,9 +65,13 @@ class Database(object):
         if len(date) == 2:
             _month = int(date)
 
-            for found in self.collection.find( {
-                                                    'date.month' : _month,
-                                                } ):
+            for found in self.collection.find( { 'date.month' : _month } ):
+                print(found)
+
+        elif len(date) == 4:
+            _year = int(date)
+
+            for found in self.collection.find( { 'date.year' : _year } ):
                 print(found)
 
         elif len(date) == 5:

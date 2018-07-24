@@ -1,6 +1,5 @@
 import error_handler
 import datetime
-from transaction import Transaction
 from database import Database
 import helper
 
@@ -92,3 +91,6 @@ def clear():
 
 def quit():
     print("Goodbye!")
+
+def test():
+    return 
